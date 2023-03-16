@@ -6,11 +6,12 @@ function addEntry(name, price, years) {
   var newEntry = {"name": name, "price": price, "years": years}
   state.push(newEntry)
   setState(state)
+  return state.length - 1
 }
 
 // Render an entry as HTML
-function renderEntry(parentNode, name, price, years) {
-  parentNode.innerHTML += `
+function renderEntry(parentNode, index, name, price, years) {
+  var html = `
     <div class="row">
       <div class="two columns">${name}</div>
       <div class="two columns">${price}</div>
@@ -19,6 +20,26 @@ function renderEntry(parentNode, name, price, years) {
       <div class="two columns"><button class="delete">Delete</button></div>
     </div>
     `;
+  var element = htmlToElement(html)
+  var deleteButton = element.querySelector(".delete")
+  deleteButton.onclick = function(){
+    deleteButton.parentNode.parentNode.remove()
+    var state = getState()
+    state.splice(index, 1)
+    setState(state)
+  }
+  parentNode.appendChild(element)
+}
+
+/**
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
 }
 
 // On page reload, restore all entries from the state
@@ -26,7 +47,7 @@ var state = getState()
 var itemsContainer = document.querySelector('#items')
 for(var i=0; i<state.length; i++){
   var element = state[i]
-  renderEntry(itemsContainer, element["name"], element["price"], element["years"])
+  renderEntry(itemsContainer, i, element["name"], element["price"], element["years"])
 }
 
 // Add and remove items with the form
@@ -45,14 +66,8 @@ document.querySelector('#push').onclick = function(){
     var price = document.querySelector("form[name='add'] input[name='price']").value
     var years = document.querySelector("form[name='add'] input[name='years']").value
     var items = document.querySelector('#items')
-    addEntry(name, price, years)
-    renderEntry(items, name, price, years)
+    var stateIndex = addEntry(name, price, years)
+    renderEntry(items, stateIndex, name, price, years)
     document.getElementById("add").reset();
-    var current_items = document.querySelectorAll(".delete");
-    for(var i=0; i<current_items.length; i++){
-      current_items[i].onclick = function(){
-        this.parentNode.parentNode.remove();
-      }
-    }
   }
 }
