@@ -1,17 +1,4 @@
-// Get state from localStorage as JSON
-function getState() {
-  const state = localStorage.getItem("state")
-  if (state) {
-    return JSON.parse(state)
-  } else {
-    return []
-  }
-}
-
-// Stringify the state and store it in localStorage
-function setState(state) {
-  localStorage.setItem("state", JSON.stringify(state))
-}
+import { getState, setState } from "./state.js";
 
 // Add entry to the state
 function addEntry(name, price, years) {
