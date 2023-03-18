@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -10,12 +11,11 @@
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -23,31 +23,134 @@
 </head>
 
 <body>
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-    <h1>Monthlify</h1>
-    <!-- Header -->
-    <div id="items">
-      <div class="row">
-        <div class="two columns"><strong>Name</strong></div>
-        <div class="two columns"><strong>Price</strong></div>
-        <div class="two columns"><strong>Years</strong></div>
-        <div class="two columns"><strong>MONTHLIFY</strong></div>
-      </div>
-    </div>
-      <div class="row" style="margin-top: 1rem;">
-        <div class="twelve columns" id="newtask">
-          <form id="add", name="add">
-            <input type="text" name="name" placeholder="Name">
-            <input type="text" name="price" placeholder="Price">
-            <input type="text" name="years" placeholder="Years">
-            <button class="button-primary" id="push" type="button">Add</button>
-          </form>
-        </div>
-      </div>
-  </div>
-</div>
-<script type="module" src="js/main.js"></script>
+  <script src="https://unpkg.com/petite-vue"></script>
+  <script type="module">
+    import {createApp, reactive} from 'https://unpkg.com/petite-vue?module'
+
+    const monthlify = reactive({
+      entries: [],
+
+      addEntry(name, price, years) {
+      this.entries.push({"name": name, "price": price, "years": years})
+      this.persist()
+      },
+
+      loadEntires() {
+        this.entries = JSON.parse(window.localStorage.getItem("monthlify"));
+      },
+
+      deleteEntry(index) {
+        this.entries.splice(index, 1)
+        this.persist()
+      },
+
+      persist() {
+        window.localStorage.setItem("monthlify", JSON.stringify(this.entries));
+      },
+
+      fields: {
+        name: {
+          label: "Name",
+          value: "",
+          inputType: "text",
+        },
+        price: {
+          label: "Price",
+          value: 0,
+          inputType: "number",
+        },
+        years: {
+          label: "Years",
+          value: 0,
+          inputType: "number",
+        }
+      },
+
+      submit() {
+        this.addEntry(this.fields.name.value, this.fields.price.value, this.fields.years.value);
+      },
+    })
+
+    monthlify.loadEntires()
+
+    createApp({
+      monthlify
+    }).mount()
+  </script>
+
+  <!-- Header -->
+  <header>
+    <nav class="grid place-items-center bg-yellow-400 text-black">
+      <h1
+        class="m-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        Monthlify</h1>
+    </nav>
+  </header>
+
+
+  <!-- Main container -->
+  <div class="grid place-items-center mt-6">
+    <!-- List container -->
+    <div
+      class="hidden w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 sm:max-w-md dark:bg-gray-800 dark:border-gray-700"
+      @vue:mounted="$el.classList.remove('hidden')">
+      <div class="flow-root">
+        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+          <li v-for="(entry, index) in monthlify.entries" class="py-3 sm:py-4">
+            <div class="flex items-center space-x-4">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  {{ entry.name }}
+                </p>
+                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                  €{{ entry.price }} - {{ entry.years }} years
+                </p>
+              </div>
+              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                €{{ Number.parseFloat(entry.price / (12 * entry.years)).toFixed(1) }}
+              </div>
+              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                <button @click="monthlify.deleteEntry(index)"
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-gray-600 border-2 border-gray-600 rounded-lg hover:bg-yellow-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
+                      fill="currentColor" />
+                    <path d="M9 9H11V17H9V9Z" fill="currentColor" />
+                    <path d="M13 9H15V17H13V9Z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <hr/>
+
+        <!-- Form -->
+        <form class="pt-8">
+          <div v-for="(field, key) in monthlify.fields" class="relative">
+
+            <div class="mb-6">
+              <label :for="key" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                {{ field.label }}
+              </label>
+              <input :type="field.inputType" :id="key" v-model="field.value"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required>
+            </div>
+          </div>
+
+          <button type="submit"
+            class="text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            @click.prevent="monthlify.submit"
+            >
+            Add
+          </button>
+
+        </form> <!-- Form -->
+      </div> <!-- List item -->
+    </div> <!-- List container -->
+  </div> <!-- Main container -->
 </body>
 </html>
