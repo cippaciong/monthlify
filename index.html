@@ -87,7 +87,7 @@
   <header>
     <nav class="grid place-items-center bg-yellow-400 text-black">
       <h1
-        class="m-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        class="m-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
         Monthlify</h1>
     </nav>
   </header>
@@ -97,26 +97,26 @@
   <div class="grid place-items-center mt-6">
     <!-- List container -->
     <div
-      class="hidden w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 sm:max-w-md dark:bg-gray-800 dark:border-gray-700"
+      class="hidden w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 sm:max-w-md"
       @vue:mounted="$el.classList.remove('hidden')">
       <div class="flow-root">
-        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+        <ul role="list" class="divide-y divide-gray-200">
           <li v-for="(entry, index) in monthlify.entries" class="py-3 sm:py-4">
             <div class="flex items-center space-x-4">
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                <p class="text-sm font-medium text-gray-900 truncate">
                   {{ entry.name }}
                 </p>
-                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                <p class="text-sm text-gray-500 truncate">
                   €{{ entry.price }} - {{ entry.years }} years
                 </p>
               </div>
-              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+              <div class="inline-flex items-center text-base font-semibold text-gray-900">
                 €{{ Number.parseFloat(entry.price / (12 * entry.years)).toFixed(1) }}
               </div>
-              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+              <div class="inline-flex items-center text-base font-semibold text-gray-900">
                 <button @click="monthlify.deleteEntry(index)"
-                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-gray-600 border-2 border-gray-600 rounded-lg hover:bg-yellow-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-gray-600 border-2 border-gray-600 rounded-lg hover:bg-yellow-200 focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                       d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
@@ -137,11 +137,11 @@
           <div v-for="(field, key) in monthlify.fields" class="relative">
 
             <div class="mb-6">
-              <label :for="key" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <label :for="key" class="block mb-2 text-sm font-medium text-gray-900">
                 {{ field.label }}
               </label>
               <input :type="field.inputType" :id="key" v-model="field.value"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 required>
             </div>
           </div>
