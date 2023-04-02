@@ -36,7 +36,12 @@
       },
 
       loadEntires() {
-        this.entries = JSON.parse(window.localStorage.getItem("monthlify"));
+        const state = window.localStorage.getItem("monthlify")
+        if (state) {
+          this.entries = JSON.parse(state);
+        } else {
+          this.entries = []
+        }
       },
 
       deleteEntry(index) {
