@@ -31,8 +31,8 @@
       entries: [],
 
       addEntry(name, price, years) {
-      this.entries.push({"name": name, "price": price, "years": years})
-      this.persist()
+        this.entries.push({"name": name, "price": price, "years": years})
+        this.persist()
       },
 
       loadEntires() {
@@ -58,16 +58,27 @@
           label: "Name",
           value: "",
           inputType: "text",
+          validation: {
+            required: true,
+          },
         },
         price: {
           label: "Price",
-          value: 0,
+          value: 1,
           inputType: "number",
+          validation: {
+            min: "1",
+            required: true,
+          },
         },
         years: {
           label: "Years",
-          value: 0,
+          value: 1,
           inputType: "number",
+          validation: {
+            min: "1",
+            required: true,
+          },
         }
       },
 
@@ -86,8 +97,7 @@
   <!-- Header -->
   <header>
     <nav class="grid place-items-center bg-yellow-400 text-black">
-      <h1
-        class="m-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+      <h1 class="m-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
         Monthlify</h1>
     </nav>
   </header>
@@ -96,8 +106,7 @@
   <!-- Main container -->
   <div class="grid place-items-center mt-6">
     <!-- List container -->
-    <div
-      class="hidden w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 sm:max-w-md"
+    <div class="hidden w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 sm:max-w-md"
       @vue:mounted="$el.classList.remove('hidden')">
       <div class="flow-root">
         <ul role="list" class="divide-y divide-gray-200">
@@ -112,7 +121,8 @@
                 </p>
               </div>
               <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                <span class="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-yellow-400 relative inline-block">
+                <span
+                  class="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-yellow-400 relative inline-block">
                   <span class="relative text-black">
                     €{{ Number.parseFloat(entry.price / (12 * entry.years)).toFixed(1) }}
                   </span>
@@ -134,32 +144,29 @@
           </li>
         </ul>
 
-        <hr/>
+        <hr />
 
         <!-- Form -->
-        <form class="pt-8">
+        <form @submit.prevent="monthlify.submit" class="pt-8">
           <div v-for="(field, key) in monthlify.fields" class="relative">
-
             <div class="mb-6">
               <label :for="key" class="block mb-2 text-sm font-medium text-gray-900">
                 {{ field.label }}
               </label>
-              <input :type="field.inputType" :id="key" v-model="field.value"
+              <input :type="field.inputType" :id="key" v-model="field.value" v-bind="field.validation"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 required>
             </div>
-          </div>
+          </div> <!-- For loop -->
 
           <button type="submit"
-            class="text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-            @click.prevent="monthlify.submit"
-            >
+            class="text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
             Add
           </button>
-
         </form> <!-- Form -->
       </div> <!-- List item -->
     </div> <!-- List container -->
   </div> <!-- Main container -->
 </body>
+
 </html>
